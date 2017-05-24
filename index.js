@@ -20,14 +20,19 @@ ipcMain.on('videos:added', (e, videos) => {
     return new Promise((resolve, reject) => {
       ffmpeg.ffprobe(video.path, (err, metadata) => {
         err ? console.log('ffprobe err:', err) : null
-        resolve(metadata)
+        video.duration = metadata.format.duration
+        video.format = 'avi' // Default to 'avi'
+        resolve(video)
       })
     })
   })
 
-  // .all() method waits for all Promises in promisesArray to
-  // resolve before `Promise` that is called on resolves itself
+  // .all() method waits for all Promises in
+  // promisesArray to resolve before `Promise`
+  // that is called on resolves itself
 
   Promise.all(promisesArray)
-    .then(results => console.log(results))
+    .then(videosArrayWithMetadata => {
+      mainWindow.webContents.send('videos:metadata', videosArrayWithMetadata)
+    })
 })

@@ -6,12 +6,18 @@ import {
   REMOVE_ALL_VIDEOS,
   VIDEO_PROGRESS,
   VIDEO_COMPLETE
-} from "./actionTypes"
+} from './actionTypes'
 
 // TODO: Communicate to MainWindow process that videos
 // have been added and are pending conversion
 export const addVideos = videos => dispatch => {
   ipcRenderer.send('videos:added', videos)
+  ipcRenderer.on('videos:metadata', (e, videosArrayWithMetadata) => {
+    dispatch({
+      type: ADD_VIDEOS,
+      payload: videosArrayWithMetadata
+    })
+  })
 }
 
 
