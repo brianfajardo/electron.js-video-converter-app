@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const ffmpeg = require('fluent-ffmpeg')
 
-
 let mainWindow
 
 app.on('ready', () => {
@@ -11,16 +10,24 @@ app.on('ready', () => {
     width: 800,
     webPreferences: { backgroundThrottling: false }
   })
+
   mainWindow.loadURL(`file://${__dirname}/src/index.html`)
 })
 
 ipcMain.on('videos:added', (e, videos) => {
 
-  const promise = new Promise((resolve, reject) => {
-    ffmpeg.ffprobe(videos[0].path, (err, metadata) => {
-      resolve(metadata)
+  const promisesArray = videos.map(video => {
+    return new Promise((resolve, reject) => {
+      ffmpeg.ffprobe(video.path, (err, metadata) => {
+        err ? console.log('ffprobe err:', err) : null
+        resolve(metadata)
+      })
     })
   })
 
-  promise.then(metadata => console.log(metadata))
+  // .all() method waits for all Promises in promisesArray to
+  // resolve before `Promise` that is called on resolves itself
+
+  Promise.all(promisesArray)
+    .then(results => console.log(results))
 })
