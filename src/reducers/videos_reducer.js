@@ -6,7 +6,7 @@ import {
   REMOVE_ALL_VIDEOS,
   VIDEO_PROGRESS,
   VIDEO_COMPLETE
-} from '../actions/types'
+} from '../actions/actionTypes'
 
 const INITIAL_STATE = {}
 

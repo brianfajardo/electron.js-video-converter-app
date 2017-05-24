@@ -6,7 +6,7 @@ import {
   REMOVE_ALL_VIDEOS,
   VIDEO_PROGRESS,
   VIDEO_COMPLETE
-} from "./types"
+} from "./actionTypes"
 
 // TODO: Communicate to MainWindow process that videos
 // have been added and are pending conversion
