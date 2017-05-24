@@ -15,7 +15,6 @@ class ConvertScreen extends Component {
           onFormatChange={this.props.setFormat}
           onFolderOpen={this.props.showInFolder}
           removeVideo={this.props.removeVideo}
-
         />
         <ConvertPanel />
       </div>
@@ -27,4 +26,4 @@ function mapStateToProps(state) {
   return { videos: state.videos }
 }
 
-export default connect(mapStateToProps, { setFormat, removeVideo, showInFolder })(ConvertScreen);
+export default connect(mapStateToProps, { setFormat, removeVideo, showInFolder })(ConvertScreen)
