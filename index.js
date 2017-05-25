@@ -38,6 +38,7 @@ ipcMain.on('videos:added', (e, videos) => {
 })
 
 ipcMain.on('conversion:start', (e, videos) => {
+
   videos.forEach(video => {
     const videoPath = video.path.split(video.name)[0]
     const splitName = video.name.split('.')
@@ -45,7 +46,14 @@ ipcMain.on('conversion:start', (e, videos) => {
 
     ffmpeg(video.path)
       .output(`${videoPath}${outputName}.${video.format}`)
-      .on('end', () => console.log('Video conversion finished'))
+      .on('progress', ({ timemark }) =>
+        // console.log('FFMPEG:timemark', timemark)
+        mainWindow.webContents.send('conversion:progress', { video, timemark })
+      )
+      .on('end', () => {
+        console.log('FFMPEG: Video conversion complete')
+        mainWindow.webContents.send('conversion:end', { video, videoPath })
+      })
       .run()
   })
 })

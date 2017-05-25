@@ -17,7 +17,7 @@ export default (state = INITIAL_STATE, action) => {
     case VIDEO_PROGRESS:
       return { ...state, [action.payload.path]: action.payload }
     case ADD_VIDEOS:
-      return { ...state, ..._.mapKeys(action.payload, 'path')}
+      return { ...state, ..._.mapKeys(action.payload, 'path') }
     case ADD_VIDEO:
       return { ...state, [action.payload.path]: action.payload }
     case REMOVE_VIDEO:
