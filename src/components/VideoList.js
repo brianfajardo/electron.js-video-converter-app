@@ -18,7 +18,9 @@ class VideoList extends Component {
   showStatus({ complete, timemark, outputPath, err }) {
     if (complete) {
       return (
-        <button onClick={() => this.props.onFolderOpen(outputPath)} className="btn">
+        <button onClick={() => this.props.onFolderOpen(outputPath)}
+          className="btn"
+        >
           Open Folder
         </button>
       )
@@ -40,6 +42,7 @@ class VideoList extends Component {
 
   renderVideos() {
     return _.map(this.props.videos, video => {
+      console.log(video)
       const { name, path, duration, format, timemark, complete, outputPath, err } = video
       const formatedDuration = moment.duration(duration, 's').format("hh:mm:ss", { trim: false })
 

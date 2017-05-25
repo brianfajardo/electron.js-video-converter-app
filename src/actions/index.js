@@ -16,20 +16,19 @@ export const addVideos = videos => dispatch => {
 }
 
 export const convertVideos = videos => dispatch => {
-
   ipcRenderer.send('conversion:start', videos)
 
   ipcRenderer.on('conversion:progress', (e, { video, timemark }) => {
     dispatch({ type: VIDEO_PROGRESS, payload: { ...video, timemark } })
   })
 
-  ipcRenderer.on('conversion:end', (e, { video, videoPath }) => {
-    dispatch({ type: VIDEO_COMPLETE, payload: { ...video, videoPath } })
+  ipcRenderer.on('conversion:end', (e, { video, outputPath }) => {
+    dispatch({ type: VIDEO_COMPLETE, payload: { ...video, outputPath } })
   })
 }
 
-export const showInFolder = outputPath => dispatch => {
-
+export const showInFolder = videoPath => dispatch => {
+  ipcRenderer.send('folder:open', videoPath)
 }
 
 export const addVideo = video => ({

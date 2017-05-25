@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const ffmpeg = require('fluent-ffmpeg')
 
 let mainWindow
@@ -10,7 +10,6 @@ app.on('ready', () => {
     width: 800,
     webPreferences: { backgroundThrottling: false }
   })
-
   mainWindow.loadURL(`file://${__dirname}/src/index.html`)
 })
 
@@ -40,20 +39,23 @@ ipcMain.on('videos:added', (e, videos) => {
 ipcMain.on('conversion:start', (e, videos) => {
 
   videos.forEach(video => {
-    const videoPath = video.path.split(video.name)[0]
+    const outputDirectory = video.path.split(video.name)[0]
     const splitName = video.name.split('.')
     const outputName = splitName.length === 3 ? splitName.slice(0, 2).join('. ') : splitName[0]
+    const outputPath = `${outputDirectory}${outputName}.${video.format}`
 
     ffmpeg(video.path)
-      .output(`${videoPath}${outputName}.${video.format}`)
+      .output(outputPath)
       .on('progress', ({ timemark }) =>
-        // console.log('FFMPEG:timemark', timemark)
-        mainWindow.webContents.send('conversion:progress', { video, timemark })
-      )
+        mainWindow.webContents.send('conversion:progress', { video, timemark }))
       .on('end', () => {
         console.log('FFMPEG: Video conversion complete')
-        mainWindow.webContents.send('conversion:end', { video, videoPath })
+        mainWindow.webContents.send('conversion:end', { video, outputPath })
       })
       .run()
   })
+})
+
+ipcMain.on('folder:open', (e, outputPath) => {
+  shell.showItemInFolder(outputPath)
 })
