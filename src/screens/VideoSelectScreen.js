@@ -5,15 +5,13 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 
 class VideoSelectScreen extends Component {
-  state = {
-    hovering: false
-  }
+  state = { hovering: false }
 
-  onDrop = (files) => {
+  onDrop(files) {
     // invalid file types are not added to files object
     const videos = _.map(files, ({ name, path, size, type }) => {
       return { name, path, size, type }
-    });
+    })
 
     if (videos.length) {
       this.props.addVideos(videos)
@@ -22,7 +20,6 @@ class VideoSelectScreen extends Component {
         this.props.history.push('/convert')
       }
     }
-
   }
 
   renderChildren({ isDragActive, isDragReject }) {
@@ -39,7 +36,7 @@ class VideoSelectScreen extends Component {
     return (
       <div className={this.props.small ? "video-select-screen-small" : "video-select-screen"}>
         <Dropzone
-          onDrop={this.onDrop}
+          onDrop={this.onDrop.bind(this)}
           multiple
           accept="video/*"
           className="dropzone"

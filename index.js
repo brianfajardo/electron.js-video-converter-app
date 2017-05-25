@@ -36,3 +36,16 @@ ipcMain.on('videos:added', (e, videos) => {
       mainWindow.webContents.send('videos:metadata', videosArrayWithMetadata)
     })
 })
+
+ipcMain.on('conversion:start', (e, videos) => {
+  videos.forEach(video => {
+    const videoPath = video.path.split(video.name)[0]
+    const splitName = video.name.split('.')
+    const outputName = splitName.length === 3 ? splitName.slice(0, 2).join('. ') : splitName[0]
+
+    ffmpeg(video.path)
+      .output(`${videoPath}${outputName}.${video.format}`)
+      .on('end', () => console.log('Video conversion finished'))
+      .run()
+  })
+})
